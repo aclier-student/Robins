@@ -1,0 +1,94 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{r}
+# pull the changes in the online repository to this local folder
+# this is important when you collaborate on the project
+# it updates all your scripts to the latest version, and ensures that you have the same versions of the scripts as your collaborators
+system2("git", c("-C", here::here(), "pull"))
+
+# Include the setup script with source(). This will run the code in the setup script, and load the packages and functions that are defined in this script and that we will lead later on in upcoming scripts that we use in this course.
+source(here::here("scripts", "01-setup.R"))
+
+# show which package namespaces are available to you to work with (loaded packages)
+search()
+```
+
+
+```{r}
+# Run the setup script containing package restoration, helper functions, etc.
+source(here::here("scripts", "01-setup.r"))
+
+# Pull changes from the online repository into this local project folder.
+# This is especially important when collaborating on the same project.
+system2("git", c("-C", here::here(), "pull"))
+
+# show which package namespaces are loaded to memory with library()
+search()
+```
+
+df_robins<-
+
+```{r}
+install.packages("googlesheets4")
+library(read_gsdb)
+df_robins<-read_gsdb("https://docs.google.com/spreadsheets/d/1VixxR7eME01TZqJW3aw5KQ_rkwljIgeMYbpgh1iOFDQ/edit?gid=0#gid=0")
+
+```
+
+
+
+```{r}
+#Captures by date
+#df_robincaptures<-df_robins$captures|> dplyr::filter(species=="robin")
+birdcounts<-dplyr::count(df_robins$captures, species, date)
+?as.Date()
+ggplot(birdcounts, mapping=aes(x=date, y=n, fill=species))+
+  geom_col()+
+  labs(x = "Date", y = "Birds captured")+
+  scale_fill_discrete(
+    name = "Species",
+    labels = c("robin" = "Robin", "blackbird" = "Blackbird")
+  )
+
+?ggplot()
+
+```
+
+
+
+```{r}
+#Ratio young to old
+#Seen again yes/no
+#Average mass per day
+#Time of day
+
+```
+
+
+```{r}
+#Ratio young to old
+#Averaging over all days to get more meaningful data
+#Just using robins
+df_robincaptures<-df_robins$captures|> dplyr::filter(species=="robin")
+robincounts<-dplyr::count(df_robincaptures, age, date)
+```
+
+
+
+
+
+
+
+```{r}
+#Weight and tarsus length
+ggplot(df_robins$captures, mapping=aes(x=weight_g, y=tarsus_mm, color=species))+
+  geom_point()+
+  labs(x = "Weight (g)", y = "Tarsus length (mm)")+
+  scale_color_discrete(
+    name = "Species",
+    labels = c("robin" = "Robin", "blackbird" = "Blackbird")
+  )
+```
