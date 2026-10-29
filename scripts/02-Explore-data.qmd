@@ -29,7 +29,6 @@ system2("git", c("-C", here::here(), "pull"))
 search()
 ```
 
-df_robins<-
 
 ```{r}
 install.packages("googlesheets4")
@@ -47,11 +46,14 @@ birdcounts<-dplyr::count(df_robins$captures, species, date)
 ?as.Date()
 ggplot(birdcounts, mapping=aes(x=date, y=n, fill=species))+
   geom_col()+
-  labs(x = "Date", y = "Birds captured")+
+  labs(x = "Date", y = "Birds captured",  title="Bird captures by date")+
   scale_fill_discrete(
     name = "Species",
-    labels = c("robin" = "Robin", "blackbird" = "Blackbird")
-  )
+    labels = c("robin" = "Robin", "blackbird" = "Blackbird"))+
+        scale_fill_manual(
+    name="Species",
+          values = c("robin" = "red", "blackbird" = "black")
+        )
 
 ?ggplot()
 
@@ -73,22 +75,54 @@ ggplot(birdcounts, mapping=aes(x=date, y=n, fill=species))+
 #Averaging over all days to get more meaningful data
 #Just using robins
 df_robincaptures<-df_robins$captures|> dplyr::filter(species=="robin")
-robincounts<-dplyr::count(df_robincaptures, age, date)
+robincounts<-dplyr::count(df_robincaptures, age)
+ggplot(robincounts, mapping=aes(x=age, y=n, fill=age))+
+  geom_col()+
+  labs(x = "Age", y = "Birds captured",  title="Robins captured by age")+
+  scale_fill_discrete(
+    name = "Age",
+    labels = c("1st year" = "1st Year", "adult" = "Adult"))+
+        scale_x_discrete(labels = c("1st year" = "1st Year", "adult" = "Adult"))
+ theme_minimal()
 ```
 
 
 
+```{r}
+#Weight by recapture status
+df_robincaptures |>
+  dplyr::mutate(weight_g = as.numeric(weight_g)) |>
+  dplyr::filter(!is.na(weight_g)) |>
+  ggplot2::ggplot(ggplot2::aes(x = recapture, y = weight_g)) +
+  ggplot2::geom_boxplot() +
+  ggplot2::labs(x = "Recapture status", y = "Weight (g)")+
+   labs(title = "Weight by recapture status")
+    ggplot2::theme_minimal()
 
+```
 
 
 
 ```{r}
 #Weight and tarsus length
-ggplot(df_robins$captures, mapping=aes(x=weight_g, y=tarsus_mm, color=species))+
+ggplot(df_robincaptures, mapping=aes(x=as.numeric(weight_g), y=as.numeric(tarsus_mm)))+
   geom_point()+
   labs(x = "Weight (g)", y = "Tarsus length (mm)")+
-  scale_color_discrete(
-    name = "Species",
-    labels = c("robin" = "Robin", "blackbird" = "Blackbird")
-  )
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Relationship between Weight and Tarsus Length") +
+  theme_minimal()
+```
+
+```{r}
+#Time of day
+
+df_robincaptures<-df_robincaptures|>
+dplyr::mutate(realtime = format(time, "%H:%M:%S"))
+
+ggplot2::ggplot(df_robincaptures, ggplot2::aes(x = time, y = as.numeric(weight_g))) +
+  ggplot2::geom_point() +
+  ggplot2::scale_x_datetime(date_labels = "%H:%M", date_breaks = "2 hours") +
+  ggplot2::labs(x = "Time of day", y = "Weight (g)") +
+   labs(title = "Robin weight by time of day")
+  ggplot2::theme_minimal()
 ```
