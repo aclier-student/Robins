@@ -87,7 +87,6 @@ ggplot(robincounts, mapping=aes(x=age, y=n, fill=age))+
 ```
 
 
-
 ```{r}
 #Weight by recapture status
 df_robincaptures |>
@@ -100,7 +99,6 @@ df_robincaptures |>
     ggplot2::theme_minimal()
 
 ```
-
 
 
 ```{r}
