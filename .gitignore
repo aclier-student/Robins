@@ -1,0 +1,22 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+/figures
+
+# Quarto rendered output
+*.html
+*_files/
+
+# Quarto cache
+.quarto/
+*_cache/
+
+/.quarto/
+**/*.quarto_ipynb
+
+# Quarto rendered output
+/preview
+
+# figures produced by scripts
+/figures

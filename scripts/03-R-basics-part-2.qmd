@@ -1,0 +1,361 @@
+---
+title: "03 R basics: variables, data types, dates, and functions"
+subtitle: "Introduce variables, vectors, operators, data frames, tibbles, data types, dates, functions, models, and methods"
+author: "Han Olff"
+date: "2026-8-29"
+editor_options: 
+  chunk_output_type: console
+execute:
+  output: false
+  warning: false
+  message: false
+---
+
+# 01 Setup your environment
+
+Run the common setup script and synchronize the local project with
+GitHub.
+
+```{r}
+# Run the setup script containing package restoration, helper functions, etc.
+source(here::here("scripts", "01-setup.r"))
+
+# Pull changes from the online repository into this local project folder.
+# This is especially important when collaborating on the same project.
+system2("git", c("-C", here::here(), "pull"))
+
+# show which package namespaces are loaded to memory with library()
+search()
+```
+
+# 02 Variables, vectors, and operators
+
+Variables are named objects used to store values.
+
+```{r}
+# Create a variable and assign it the value 32 and print it
+
+```
+
+The equals sign `=` can also be used for assignment, but `<-` is
+conventional in R.
+
+## Logical comparison operators
+
+```{r}
+# compare different logical comparison operators
+class_size == 32 # is class_size equal to 32? Returns TRUE or FALSE
+class_size != 35 # is class_size different from 35?
+class_size > 20 # is class_size greater than 20?
+class_size < 20 # is class_size less than 20?
+class_size >= 28 # is class_size greater than or equal to 28?
+class_size <= 28 # is class_size less than or equal to 28?
+```
+
+## Calculations with variables
+
+Variables can be used in calculations.
+
+```{r}
+# calculate twice the class size and store the result
+
+# display the value of double_class_size
+
+```
+
+Calculations can also be performed directly of course on numbers without intermediate steps.
+
+```{r}
+
+
+```
+
+Variables can be combined with other variables in calculations.
+
+```{r}
+# calculate half the class size
+
+# display the value of half_class_size
+
+# add three variables
+
+# display the result
+
+```
+
+## Updating variables
+
+An existing variable can be assigned a new value, you can overwrite it
+
+```{r}
+# overwrite class size with a new value
+
+
+```
+
+## Vectors
+
+A vector is an ordered collection of values. Vectors can contain
+numeric, character, or logical values. The `c()` function
+("combine") creates a vector.
+
+```{r}
+# create vector with four elements and display it
+
+# Operations on a vector are normally applied element by element, multiply the vector by 2
+
+
+# Inspect the class of the vector object.
+
+
+```
+
+# 03 Data frames and tibbles
+
+Data frames organize variables as columns and observations as rows.
+A data frame is a table-like object. Each column is a vector and
+different columns can have different data types. A data frame is
+also a special type of list in which the columns have the same
+length, allowing them to form rows.
+
+```{r}
+# make a dateframe with four  variables and three rows
+
+# Inspect the data frame.
+# display the complete data frame
+
+# display the names of its variables (columns)
+
+# inspect the class of the object
+
+# extract the species column as a vector
+
+```
+
+## Selecting and filtering with dplyr
+
+The pipe operator `|>` passes the result on the left to the function
+on the right, allowing a sequence of operations on a data frame or
+tibble.
+
+```{r}
+# select and filter rows and columns from the dataframe that you created
+
+
+```
+
+## Tibbles
+
+A tibble is a modern version of a data frame used by the tidyverse.
+Its print method displays variable types and limits the output to
+rows and columns that fit conveniently on screen.
+
+```{r}
+# convert your dataframe to a tibble
+
+
+```
+
+# 04 Data types
+
+Common basic data types include numeric, integer, character, and
+logical.
+
+## Numeric
+
+Numbers, including values with decimal points.
+
+```{r}
+# assign a numeric value to a variable
+
+# display the value
+
+# inspect its class
+
+```
+
+## Integer
+
+Whole numbers explicitly marked with `L`.
+
+```{r}
+# Assign an integer to a variable 
+
+# display the value
+
+# inspect its class
+
+```
+
+## Character
+
+Text enclosed in quotation marks.
+
+```{r}
+# assign a character value to a variable
+
+# display the value
+
+# inspect its class
+
+```
+
+## Logical
+
+`TRUE` or `FALSE`.
+
+```{r}
+# assign a logical value to a variable and inspect it
+
+
+
+```
+
+# 05 Dates and time
+
+Dates written between quotation marks start as character strings.
+The lubridate package provides functions for converting them into
+date/time objects.
+
+```{r}
+# A date written as text is still a character object
+# assign a data to a variable
+date_var <- "2023-01-12"
+class(date_var)
+
+# But arithmetic does not work as date arithmetic while the value is character.
+
+
+# Convert year-month-day text into a Date object and inspect it
+
+# Date objects support date arithmetic - check it
+
+
+```
+
+## Different input formats for dates and times
+
+```{r}
+# dmy() parses dates written as day-month-year - try it
+
+# ymd_hms() parses year-month-day plus hours, minutes, and seconds - try it
+
+
+```
+
+## Time zones
+
+```{r}
+# Interpret the stated clock time as local time in the Netherlands.
+
+
+# Interpret the stated clock time as local time in Kenya.
+# Time zones in R use standard Olson/IANA time-zone names.
+
+
+
+```
+
+# 06 Statistical functions
+
+Functions take inputs (arguments), perform operations, and return
+results.
+
+```{r}
+# R contains many built-in functions, try sqrt()
+
+
+# Statistical analyses are also implemented as functions.
+# simple one: calculate the mean
+
+
+```
+
+`lm()` fits a linear model and returns an object containing the
+model results.
+
+```{r}
+# define  x and y variables each with 5 elements
+
+# fit a linear model of y as a function of x using the lm() function
+
+```
+
+`model1` is an object of class `"lm"`. Internally, an `lm` object is
+a named list containing many model components; each model component
+such as the original data, fitted coefficients, residuals, fit, etc.
+is stored as a list element.
+
+```{r}
+# inspect the model1 object
+
+```
+
+Individual elements of the model named list object can be accessed
+with `$` so that they can be used in further data analyses.
+
+```{r}
+# check the coefficients stored in model1
+
+
+```
+
+`summary()` provides a more complete statistical summary of the
+fitted model.
+
+```{r}
+
+```
+
+Functions themselves are objects and their definitions can often be
+inspected.
+
+```{r}
+# display the lm function definition itself
+
+```
+
+Open the help page of lm to inspect its arguments, description, and
+examples.
+
+```{r}
+
+
+```
+
+# 07 Methods of a function
+
+A generic function can behave differently for different classes of
+objects. These class-specific implementations are called methods.
+`summary()` is a generic function with methods for many classes of
+objects.
+
+```{r}
+# Create a numeric vector.
+
+
+# The numeric vector has class "numeric".
+# apply the summary function to that vector
+
+# Apply summary() to an object of class "lm".
+
+
+```
+
+## Inspecting methods
+
+```{r}
+# methods() lists the available methods for a generic function, try it on the summary function
+
+
+```
+
+So R examines the class of an object and dispatches the appropriate
+method. For a numeric vector, `summary()` falls back to
+`summary.default()`. For an `lm` object, it uses `summary.lm()`.
+
+```{r}
+# apply the summary function to the vector object and the model1 object explicitly with the method
+
+
+```
